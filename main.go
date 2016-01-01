@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 	//GOPATH
 	//     |_src
 	//          |_the-way-to-go
@@ -14,6 +15,7 @@ import (
 	pb "the-way-to-go/GoProtobuffer"
 	a "the-way-to-go/GoroutinesAndChannels" //这里使用包别名  一个包可以由包含多个文件，因此文件名是无所谓的
 	"the-way-to-go/JsonMarshal"
+	"the-way-to-go/network"
 )
 
 func main() {
@@ -37,5 +39,9 @@ func main() {
 	}
 	fmt.Printf("\n-------------------using protobuffer---------------\n")
 	pb.Main()
-
+	//	fmt.Printf("\n-------------------using net(server)---------------\n")
+	go network.StartServer()
+	time.Sleep(1e9)
+	go network.StartClient()
+	time.Sleep(12e9)
 }
