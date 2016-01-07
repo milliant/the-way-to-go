@@ -29,30 +29,13 @@ func main() {
 	b.Main()
 	fmt.Printf("\n-----------Marchal&Unmarchal json-----------\n")
 	JsonMarshal.Main()
-	jsonInstance := &JsonMarshal.StatusDetails{
-		Kind: "kind",
-		Name: "name",
-		Causes: []JsonMarshal.StatusCause{{
-			Typea: "duplicate",
-			Field: "",
-		}, {
-			Typea: "duplicate",
-			Field: "hah",
-		}},
-	}
-	j, err := json.Marshal(jsonInstance)
-	if err != nil {
-		fmt.Print("json convert fail!")
-	} else {
-		fmt.Print(string(j)) //j 是[]byte类型，可以直接转换成string
-	}
 	fmt.Printf("\n-------------------using protobuffer---------------\n")
 	pb.Main()
 	fmt.Printf("\n-------------------using net(server)---------------\n")
 	go network.StartServer()
-	time.Sleep(1e9)
-	//	go network.StartClient()
-	//	time.Sleep(5e9)
+	time.Sleep(time.Second)
+	go network.StartClient()
+	time.Sleep(5 * time.Second)
 	fmt.Printf("\n-------------------using net(http.Get)---------------\n")
 	resp, errGet := http.Get("http://ugistry.ucloud.cn/v1/search")
 	if errGet != nil {

@@ -49,6 +49,24 @@ func Main() {
 		}
 	}
 
+	jsonInstance := &StatusDetails{
+		Kind: "kind",
+		Name: "name",
+		Causes: []StatusCause{{
+			Typea: "duplicate",
+			Field: "",
+		}, {
+			Typea: "duplicate",
+			Field: "hah",
+		}},
+	}
+	j, err := json.Marshal(jsonInstance)
+	if err != nil {
+		fmt.Print("json convert fail!")
+	} else {
+		fmt.Print(string(j)) //j 是[]byte类型，可以直接转换成string
+	}
+
 }
 
 //func NewNotFound(kind, name string) error {
