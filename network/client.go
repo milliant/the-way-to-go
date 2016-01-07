@@ -2,7 +2,10 @@ package network
 
 import (
 	"fmt"
+	"io"
 	"net"
+	"net/http"
+	"os"
 	"time"
 )
 
@@ -35,4 +38,21 @@ func readFromServer(con net.Conn) {
 		}
 		fmt.Printf("\nClient: (get message from server)" + string(buf[0:n]))
 	}
+}
+
+func UseGet() {
+	fmt.Printf("\n-------------------using net(http.Get)---------------\n")
+	resp, errGet := http.Get("http://ugistry.ucloud.cn/v1/search")
+	if errGet != nil {
+		panic(errGet.Error())
+		os.Exit(1)
+	}
+	//从response中读取数据
+	content := make([]byte, 512)
+	num, errRead := resp.Body.Read(content)
+	if errRead != nil && errRead != io.EOF {
+		panic(errRead.Error())
+		os.Exit(1)
+	}
+	fmt.Printf("Information is: ", string(content[:num]))
 }

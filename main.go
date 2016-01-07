@@ -2,10 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"log"
-	"net/http"
-	"os"
 	"time"
 	//GOPATH
 	//     |_src
@@ -14,7 +10,6 @@ import (
 	// 在引用包时以 GOPATH/src目录为相对根目录
 	//在同一个package里，多个文件被go编译器看作是一个文件，因此，这多个文件中不能出现相同的全局变量和函数，一个例外是init函数；
 	//而同一个package的不同文件可以直接引用相互之间的数据。
-	"encoding/json"
 
 	pb "the-way-to-go/GoProtobuffer"
 	a "the-way-to-go/GoroutinesAndChannels" //这里使用包别名  一个包可以由包含多个文件，因此文件名是无所谓的
@@ -33,26 +28,10 @@ func main() {
 	pb.Main()
 	fmt.Printf("\n-------------------using net(server)---------------\n")
 	go network.StartServer()
-	time.Sleep(time.Second)
+	time.Sleep(time.Second) //make sure  Server start first
 	go network.StartClient()
-	time.Sleep(5 * time.Second)
-	fmt.Printf("\n-------------------using net(http.Get)---------------\n")
-	resp, errGet := http.Get("http://ugistry.ucloud.cn/v1/search")
-	if errGet != nil {
-		panic(errGet.Error())
-		os.Exit(1)
-	}
-	//从response中读取数据
-	content := make([]byte, 512)
-	num, errRead := resp.Body.Read(content)
-	if errRead != nil && errRead != io.EOF {
-		panic(errRead.Error())
-		os.Exit(1)
-	}
-	fmt.Printf("Information is: ", string(content[:num]))
+	time.Sleep(3 * time.Second)
 	fmt.Printf("\n-------------------using os/exec(local cmd)---------------\n")
 	LocalCmd.Main()
-
-	log.Printf("The machine is down ,the monitor for this api will recove after :%d s", 4)
 
 }
