@@ -10,7 +10,7 @@ func Main() {
 	//执行ls命令  exec.Command("/bin/ls", "-l", "/")
 	//执行who命令 exec.Command("/bin/sh","-c","wh")
 	//	cmd := exec.Command("/bin/ls", "-l", "/")
-	cmd := exec.Command("python", "/home/milliant/ucloud/message/python-sdk-v2/send_sms.py", "15669317398", "Test from program")
+	cmd := exec.Command("python", "/home/miss/haha/message/python-sdk-v2/send_sms.py", "12345678912", "Test from program")
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	if err := cmd.Run(); err != nil {
