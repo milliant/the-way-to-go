@@ -9,6 +9,8 @@ import (
 func StartServer() {
 	//每运行一次这个文件就会产生，因此在运行之前需要将这个文件删除
 	filename := "/tmp/echo.sock"
+	//os.Stat returns a FileInfo describing the named file.
+	// If there is an error, it will be of type *PathError.
 	if _, err := os.Stat(filename); err == nil {
 		os.Remove(filename)
 	}

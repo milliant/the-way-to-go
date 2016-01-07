@@ -2,6 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"os"
 	"time"
 	//GOPATH
 	//     |_src
@@ -15,6 +19,7 @@ import (
 	pb "the-way-to-go/GoProtobuffer"
 	a "the-way-to-go/GoroutinesAndChannels" //这里使用包别名  一个包可以由包含多个文件，因此文件名是无所谓的
 	"the-way-to-go/JsonMarshal"
+	"the-way-to-go/LocalCmd"
 	"the-way-to-go/network"
 )
 
@@ -23,12 +28,16 @@ func main() {
 	b := a.A(3) //虽然引用了package,但是如果不使用package名做限定是无法直接使用A(type int)的
 	b.Main()
 	fmt.Printf("\n-----------Marchal&Unmarchal json-----------\n")
+	JsonMarshal.Main()
 	jsonInstance := &JsonMarshal.StatusDetails{
 		Kind: "kind",
 		Name: "name",
 		Causes: []JsonMarshal.StatusCause{{
-			Type:  "duplicate",
+			Typea: "duplicate",
 			Field: "",
+		}, {
+			Typea: "duplicate",
+			Field: "hah",
 		}},
 	}
 	j, err := json.Marshal(jsonInstance)
@@ -39,9 +48,28 @@ func main() {
 	}
 	fmt.Printf("\n-------------------using protobuffer---------------\n")
 	pb.Main()
-	//	fmt.Printf("\n-------------------using net(server)---------------\n")
+	fmt.Printf("\n-------------------using net(server)---------------\n")
 	go network.StartServer()
 	time.Sleep(1e9)
-	go network.StartClient()
-	time.Sleep(12e9)
+	//	go network.StartClient()
+	//	time.Sleep(5e9)
+	fmt.Printf("\n-------------------using net(http.Get)---------------\n")
+	resp, errGet := http.Get("http://ugistry.ucloud.cn/v1/search")
+	if errGet != nil {
+		panic(errGet.Error())
+		os.Exit(1)
+	}
+	//从response中读取数据
+	content := make([]byte, 512)
+	num, errRead := resp.Body.Read(content)
+	if errRead != nil && errRead != io.EOF {
+		panic(errRead.Error())
+		os.Exit(1)
+	}
+	fmt.Printf("Information is: ", string(content[:num]))
+	fmt.Printf("\n-------------------using os/exec(local cmd)---------------\n")
+	LocalCmd.Main()
+
+	log.Printf("The machine is down ,the monitor for this api will recove after :%d s", 4)
+
 }

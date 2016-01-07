@@ -1,5 +1,12 @@
 package JsonMarshal
 
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"os"
+)
+
 type StatusDetails struct {
 	Name              string        `json:"name,omitempty"`
 	Kind              string        `json:"kind,omitempty"`
@@ -8,9 +15,40 @@ type StatusDetails struct {
 }
 
 type StatusCause struct {
-	Type    string `json:"reason,omitempty"`
+	Typea   string `json:"reason,omitempty"`
 	Message string `json:"message,omitempty"`
 	Field   string `json:"field,omitempty"`
+}
+
+type Causes struct {
+	Reasons []StatusCause
+}
+
+func (a *StatusCause) String() string {
+	return "{Type:" + a.Typea + ",Message:" + a.Message + ",Field:" + a.Field + "}"
+}
+
+func Main() {
+	filePath := "/home/milliant/miplace/src/the-way-to-go/JsonMarshal/sample.json"
+	file, err := os.Open(filePath)
+	if err != nil {
+		panic(err.Error())
+	}
+	content, errRead := ioutil.ReadAll(file)
+	if errRead != nil {
+		panic(errRead.Error())
+	}
+	fmt.Println(string(content))
+	var causes Causes
+	errJson := json.Unmarshal(content, &causes)
+	if errJson != nil {
+		panic(errJson.Error())
+	} else {
+		for _, value := range causes.Reasons {
+			fmt.Printf(value.String())
+		}
+	}
+
 }
 
 //func NewNotFound(kind, name string) error {
